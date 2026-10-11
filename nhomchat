@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phòng Chat Nhóm Kín</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans antialiased h-screen flex flex-col overflow-hidden">
+
+    <!-- LỚP BẢO VỆ 1: MẬT KHẨU BẮT BUỘC -->
+    <div id="authOverlay" class="fixed inset-0 bg-gray-950 bg-opacity-95 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-800 border border-gray-700 rounded-2xl p-6 md:p-8 max-w-md w-full shadow-2xl space-y-6">
+            <div class="text-center">
+                <div class="bg-blue-600/20 text-blue-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 border border-blue-500/30">
+                    <i class="fa-solid fa-lock text-2xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-white">Xác Thực Truy Cập</h2>
+                <p class="text-gray-400 text-sm mt-1">Vui lòng nhập biệt danh và mật khẩu nhóm kín</p>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Biệt Danh Của Bạn</label>
+                    <input type="text" id="inputNickname" required placeholder="Nhập biệt danh..." 
+                           class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Mật Khẩu Nhóm Kín (Lớp 1)</label>
+                    <input type="password" id="inputPassword" required placeholder="Nhập mật khẩu nhóm..." 
+                           class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                </div>
+
+                <div id="authError" class="hidden text-red-400 text-xs font-medium text-center bg-red-950/50 border border-red-800/50 py-2 rounded-lg">
+                    Mật khẩu không chính xác! Vui lòng thử lại.
+                </div>
+
+                <button type="submit" 
+                        class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-2">
+                    <span>Xác Nhận Đăng Nhập</span>
+                    <i class="fa-solid fa-arrow-right text-sm"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- LỚP BẢO VỆ 2: MÃ PIN BẢO MẬT NỘI BỘ -->
+    <div id="pinOverlay" class="hidden fixed inset-0 bg-gray-950 bg-opacity-95 backdrop-blur-md z-40 flex items-center justify-center p-4">
+        <div class="bg-gray-800 border border-gray-700 rounded-2xl p-6 md:p-8 max-w-sm w-full shadow-2xl text-center space-y-5">
+            <div class="bg-amber-500/20 text-amber-400 w-16 h-16 rounded-full flex items-center justify-center mx-auto border border-amber-500/30">
+                <i class="fa-solid fa-shield-halved text-2xl"></i>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-white">Mã PIN Nội Bộ (Lớp 2)</h3>
+                <p class="text-gray-400 text-xs mt-1">Nhập mã PIN phụ để vào giao diện nhắn tin</p>
+            </div>
+
+            <div class="flex justify-center space-x-2">
+                <input type="password" id="pinInput" maxlength="6" placeholder="• • • •" 
+                       class="text-center tracking-widest text-2xl w-full bg-gray-900 border border-gray-700 rounded-xl py-3 text-white focus:outline-none focus:ring-2 focus:ring-amber-500">
+            </div>
+
+            <div id="pinError" class="hidden text-red-400 text-xs bg-red-950/50 border border-red-800/50 py-1.5 rounded-lg">
+                Mã PIN phụ không đúng!
+            </div>
+
+            <button onclick="verifyPin()" 
+                    class="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold py-3 rounded-xl transition">
+                Mở Khóa
+            </button>
+        </div>
+    </div>
+
+    <!-- GIAO DIỆN CHÍNH -->
+    <div class="flex-1 flex overflow-hidden">
+        
+        <!-- SIDEBAR PHÒNG CHAT -->
+        <aside id="sidebar" class="w-72 bg-gray-800 border-r border-gray-700 flex flex-col transition-all duration-30
