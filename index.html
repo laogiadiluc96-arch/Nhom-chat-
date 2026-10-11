@@ -26,7 +26,7 @@
     </script>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Firebase SDK (Dùng để đồng bộ thời gian thực giữa điện thoại và máy tính) -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 </head>
@@ -60,7 +60,7 @@
                     Mật khẩu hoặc biệt danh không chính xác!
                 </div>
 
-                <button type="button" onclick="handleLogin()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-2">
+                <button type="button" id="loginBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-2">
                     <span>Xác Nhận Đăng Nhập</span>
                     <i class="fa-solid fa-arrow-right text-sm"></i>
                 </button>
@@ -88,14 +88,14 @@
                 Mã PIN phụ không đúng!
             </div>
 
-            <button type="button" onclick="verifyPin()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold py-3 rounded-xl transition">
+            <button type="button" id="pinBtn" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold py-3 rounded-xl transition">
                 Mở Khóa
             </button>
         </div>
     </div>
 
     <!-- MODAL XEM ẢNH PHÓNG TO -->
-    <div id="imageModal" class="hidden fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4" onclick="closeModal()">
+    <div id="imageModal" class="hidden fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4">
         <img id="modalImg" class="max-w-full max-h-full rounded-lg shadow-2xl object-contain">
     </div>
 
@@ -109,13 +109,275 @@
                     <i class="fa-solid fa-users-gear text-blue-400 text-xl"></i>
                     <h1 class="font-bold text-lg text-white">Phòng Chat Nhóm</h1>
                 </div>
-                <button type="button" onclick="toggleSidebar()" class="md:hidden text-gray-400 hover:text-white">
+                <button type="button" id="closeSidebarBtn" class="md:hidden text-gray-400 hover:text-white">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
 
             <!-- DANH SÁCH PHÒNG CHAT -->
             <div class="flex-1 overflow-y-auto p-2 space-y-1" id="roomList">
-                <button type="button" onclick="switchRoom('chung')" id="room-chung" class="room-btn active w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition bg-blue-600 text-white">
+                <button type="button" id="room-chung" class="room-btn active w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition bg-blue-600 text-white" data-room="chung">
                     <span class="flex items-center space-x-2">
-                        <i class="fa-solid fa-hashtag
+                        <i class="fa-solid fa-hashtag text-xs"></i>
+                        <span>Phòng Chung</span>
+                    </span>
+                    <span class="text-xs bg-blue-700 px-2 py-0.5 rounded-full">Chính</span>
+                </button>
+            </div>
+
+            <!-- NGUỜI DÙNG HIỆN TẠI & TIỆN ÍCH -->
+            <div class="p-3 border-t border-gray-700 bg-gray-850 flex items-center justify-between">
+                <div class="flex items-center space-x-2 overflow-hidden">
+                    <div id="userAvatar" class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold text-white shrink-0">
+                        U
+                    </div>
+                    <div class="truncate">
+                        <p id="displayNickname" class="text-sm font-semibold text-white truncate">Chưa đăng nhập</p>
+                        <p class="text-[10px] text-green-400 flex items-center">
+                            <span class="w-1.5 h-1.5 rounded-full bg-green-400 inline-block mr-1"></span> Đã đồng bộ đám mây
+                        </p>
+                    </div>
+                </div>
+                <button type="button" id="lockBtn" title="Khóa màn hình" class="text-gray-400 hover:text-amber-400 p-1.5 rounded-lg transition">
+                    <i class="fa-solid fa-lock text-sm"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- NỘI DUNG CHAT -->
+        <main class="flex-1 flex flex-col bg-gray-900 bg-cover bg-center relative" id="chatMainBg">
+            
+            <!-- HEADER CỦA KHUNG CHAT -->
+            <header class="h-14 border-b border-gray-800 bg-gray-850/90 backdrop-blur px-4 flex items-center justify-between z-10">
+                <div class="flex items-center space-x-3">
+                    <button type="button" id="toggleSidebarBtn" class="md:hidden text-gray-400 hover:text-white">
+                        <i class="fa-solid fa-bars text-lg"></i>
+                    </button>
+                    <div>
+                        <h2 id="currentRoomTitle" class="font-bold text-white text-base"># Phòng Chung</h2>
+                        <p class="text-xs text-gray-400">Hệ thống chat nội bộ của Thịnh</p>
+                    </div>
+                </div>
+                <!-- NÚT ĐỔI ẢNH NỀN & XÓA NỀN -->
+                <div class="flex items-center space-x-2">
+                    <input type="file" id="bgInput" accept="image/*" class="hidden">
+                    <button type="button" id="changeBgBtn" class="bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white px-3 py-1.5 rounded-lg text-xs border border-gray-700 transition flex items-center space-x-1.5">
+                        <i class="fa-solid fa-image"></i>
+                        <span>Đổi nền chat</span>
+                    </button>
+                    <button type="button" id="resetBgBtn" class="hidden bg-red-900/50 hover:bg-red-800 text-red-200 px-2.5 py-1.5 rounded-lg text-xs border border-red-700 transition" title="Xóa ảnh nền">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- KHO CHỨA TIN NHẮN -->
+            <div id="chatMessages" class="flex-1 overflow-y-auto p-4 space-y-4 z-10 bg-black/40 backdrop-blur-[2px]">
+                <div class="flex flex-col items-start">
+                    <div class="flex items-baseline space-x-2 mb-1">
+                        <span class="text-xs font-semibold text-gray-400">Hệ Thống</span>
+                    </div>
+                    <div class="max-w-[80%] px-4 py-2.5 rounded-2xl text-sm bg-gray-800/90 text-gray-100 rounded-tl-none border border-gray-700 shadow-lg">
+                        Đang kết nối cơ sở dữ liệu đám mây để đồng bộ thời gian thực...
+                    </div>
+                </div>
+            </div>
+
+            <!-- KHU VỰC XEM TRƯỚC ẢNH ĐÍNH KÈM -->
+            <div id="imagePreviewContainer" class="hidden px-4 py-2 bg-gray-850/90 backdrop-blur border-t border-gray-800 flex items-center space-x-3 z-10">
+                <div class="relative inline-block">
+                    <img id="imagePreview" class="h-16 w-16 object-cover rounded-xl border border-gray-700">
+                    <button type="button" id="clearImgBtn" class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-500">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <span class="text-xs text-gray-300">Ảnh đã sẵn sàng để gửi kèm.</span>
+            </div>
+
+            <!-- KHUNG NHẬP TIN NHẮN -->
+            <footer class="p-3 bg-gray-850/90 backdrop-blur border-t border-gray-800 z-10">
+                <form id="messageForm" class="flex items-center space-x-2">
+                    <input type="file" id="imageInput" accept="image/*" class="hidden">
+                    <button type="button" id="selectImgBtn" class="bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white p-2.5 rounded-xl transition shrink-0 border border-gray-700" title="Gửi ảnh">
+                        <i class="fa-regular fa-image text-lg"></i>
+                    </button>
+
+                    <input type="text" id="messageInput" placeholder="Nhập tin nhắn..." autocomplete="off"
+                           class="flex-1 bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    
+                    <button type="submit" id="sendBtn" class="bg-blue-600 hover:bg-blue-500 text-white p-2.5 rounded-xl transition shrink-0">
+                        <i class="fa-solid fa-paper-plane text-sm px-1"></i>
+                    </button>
+                </form>
+            </footer>
+        </main>
+    </div>
+
+    <!-- APP LOGIC & FIREBASE -->
+    <script>
+        const MASTER_PASSWORD = "nhomchatkincuathinh";
+        const MASTER_PIN = "8888";
+
+        const firebaseConfig = {
+            databaseURL: "https://nhomchat-thinh-default-rtdb.firebaseio.com/"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let currentNickname = "";
+        let currentRoom = "chung";
+        let selectedImageBase64 = null;
+        let chatMessagesCache = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedBg = localStorage.getItem('thinh_chat_bg');
+            if (savedBg) {
+                applyBackground(savedBg);
+            }
+            listenToMessages(currentRoom);
+
+            // Gắn sự kiện Đăng nhập lớp 1
+            document.getElementById('loginBtn').addEventListener('click', function() {
+                const nickname = document.getElementById('inputNickname').value.trim();
+                const password = document.getElementById('inputPassword').value.trim();
+                const errorDiv = document.getElementById('authError');
+
+                if (password === MASTER_PASSWORD && nickname !== "") {
+                    currentNickname = nickname;
+                    errorDiv.classList.add('hidden');
+                    document.getElementById('authOverlay').classList.add('hidden');
+                    document.getElementById('pinOverlay').classList.remove('hidden');
+                } else {
+                    errorDiv.classList.remove('hidden');
+                }
+            });
+
+            // Gắn sự kiện Mã PIN lớp 2
+            document.getElementById('pinBtn').addEventListener('click', function() {
+                const pin = document.getElementById('pinInput').value.trim();
+                const pinError = document.getElementById('pinError');
+
+                if (pin === MASTER_PIN) {
+                    pinError.classList.add('hidden');
+                    document.getElementById('pinOverlay').classList.add('hidden');
+                    
+                    document.getElementById('displayNickname').innerText = currentNickname;
+                    document.getElementById('userAvatar').innerText = currentNickname.charAt(0).toUpperCase();
+                    
+                    renderMessages();
+                } else {
+                    pinError.classList.remove('hidden');
+                }
+            });
+
+            // Đổi ảnh nền
+            const changeBgBtn = document.getElementById('changeBgBtn');
+            const bgInput = document.getElementById('bgInput');
+            if (changeBgBtn && bgInput) {
+                changeBgBtn.addEventListener('click', () => bgInput.click());
+                bgInput.addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const bgBase64 = e.target.result;
+                            localStorage.setItem('thinh_chat_bg', bgBase64);
+                            applyBackground(bgBase64);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            const resetBgBtn = document.getElementById('resetBgBtn');
+            if (resetBgBtn) {
+                resetBgBtn.addEventListener('click', function() {
+                    localStorage.removeItem('thinh_chat_bg');
+                    document.getElementById('chatMainBg').style.backgroundImage = '';
+                    resetBgBtn.classList.add('hidden');
+                });
+            }
+
+            // Chọn ảnh gửi tin nhắn
+            const selectImgBtn = document.getElementById('selectImgBtn');
+            const imageInput = document.getElementById('imageInput');
+            if (selectImgBtn && imageInput) {
+                selectImgBtn.addEventListener('click', () => imageInput.click());
+                imageInput.addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            selectedImageBase64 = e.target.result;
+                            document.getElementById('imagePreview').src = selectedImageBase64;
+                            document.getElementById('imagePreviewContainer').classList.remove('hidden');
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            const clearImgBtn = document.getElementById('clearImgBtn');
+            if (clearImgBtn) {
+                clearImgBtn.addEventListener('click', function() {
+                    selectedImageBase64 = null;
+                    document.getElementById('imageInput').value = '';
+                    document.getElementById('imagePreviewContainer').classList.add('hidden');
+                });
+            }
+
+            // Gửi tin nhắn
+            const messageForm = document.getElementById('messageForm');
+            if (messageForm) {
+                messageForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const input = document.getElementById('messageInput');
+                    const text = input.value.trim();
+
+                    if (!text && !selectedImageBase64) return;
+
+                    const newMessageRef = db.ref('rooms/' + currentRoom).push();
+                    newMessageRef.set({
+                        sender: currentNickname,
+                        text: text,
+                        image: selectedImageBase64,
+                        timestamp: Date.now()
+                    });
+
+                    input.value = '';
+                    clearImage();
+                });
+            }
+
+            // Modal ảnh
+            const imageModal = document.getElementById('imageModal');
+            if (imageModal) {
+                imageModal.addEventListener('click', () => imageModal.classList.add('hidden'));
+            }
+
+            // Sidebar & Lock
+            const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
+            const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+            const sidebar = document.getElementById('sidebar');
+            if (toggleSidebarBtn && sidebar) {
+                toggleSidebarBtn.addEventListener('click', () => sidebar.classList.toggle('-translate-x-full'));
+            }
+            if (closeSidebarBtn && sidebar) {
+                closeSidebarBtn.addEventListener('click', () => sidebar.classList.toggle('-translate-x-full'));
+            }
+
+            const lockBtn = document.getElementById('lockBtn');
+            if (lockBtn) {
+                lockBtn.addEventListener('click', function() {
+                    document.getElementById('pinInput').value = '';
+                    document.getElementById('pinOverlay').classList.remove('hidden');
+                });
+            }
+        });
+
+        function listenToMessages(roomId) {
+            const roomRef = db.ref('rooms/' + roomId);
+            roomRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                chatMessagesCache
