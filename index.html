@@ -57,8 +57,7 @@
                     Mật khẩu hoặc biệt danh không đúng! 
                 </div>
 
-                <button type="button" onclick="handleLogin()" 
-                        class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-2">
+                <button type="button" id="loginBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-2">
                     <span>Xác Nhận Đăng Nhập</span>
                     <i class="fa-solid fa-arrow-right text-sm"></i>
                 </button>
@@ -74,7 +73,7 @@
             </div>
             <div>
                 <h3 class="text-xl font-bold text-white">Mã PIN Nội Bộ (Lớp 2)</h3>
-                <p class="text-gray-400 text-xs mt-1">Nhập mã PIN phụ để vào giao diện </p>
+                <p class="text-gray-400 text-xs mt-1">Nhập mã PIN phụ để vào giao diện (Mã: 8888)</p>
             </div>
 
             <div class="flex justify-center space-x-2">
@@ -86,8 +85,7 @@
                 Mã PIN phụ không đúng! 
             </div>
 
-            <button type="button" onclick="verifyPin()" 
-                    class="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold py-3 rounded-xl transition">
+            <button type="button" id="pinBtn" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold py-3 rounded-xl transition">
                 Mở Khóa
             </button>
         </div>
@@ -133,7 +131,7 @@
                     <div class="truncate">
                         <p id="displayNickname" class="text-sm font-semibold text-white truncate">Chưa đăng nhập</p>
                         <p class="text-[10px] text-green-400 flex items-center">
-                            <span class="w-1.5 h-1.5 rounded-full bg-green-400 inline-block mr-1"></span> Hỗ trợ gửi ảnh
+                            <span class="w-1.5 h-1.5 rounded-full bg-green-400 inline-block mr-1"></span> Sẵn sàng gửi ảnh
                         </p>
                     </div>
                 </div>
@@ -171,11 +169,11 @@
                 </div>
             </div>
 
-            <!-- KHU VỰC XEM TRƯỚC ẢNH CHUẨN BỊ GỬI -->
+            <!-- KHU VỰC XEM TRƯỚC ẢNH -->
             <div id="imagePreviewContainer" class="hidden px-4 py-2 bg-gray-850 border-t border-gray-800 flex items-center space-x-3">
                 <div class="relative inline-block">
                     <img id="imagePreview" class="h-16 w-16 object-cover rounded-xl border border-gray-700">
-                    <button onclick="clearImage()" class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-500">
+                    <button type="button" onclick="clearImage()" class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-500">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
@@ -184,18 +182,16 @@
 
             <!-- KHUNG NHẬP TIN NHẮN -->
             <footer class="p-3 bg-gray-850 border-t border-gray-800">
-                <form id="messageForm" onsubmit="sendMessage(event); return false;" class="flex items-center space-x-2">
-                    <!-- Nút chọn ảnh -->
-                    <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="previewImage(event)">
-                    <button type="button" onclick="document.getElementById('imageInput').click()" 
-                            class="bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white p-2.5 rounded-xl transition shrink-0 border border-gray-700" title="Gửi ảnh">
+                <form id="messageForm" class="flex items-center space-x-2">
+                    <input type="file" id="imageInput" accept="image/*" class="hidden">
+                    <button type="button" id="selectImgBtn" class="bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white p-2.5 rounded-xl transition shrink-0 border border-gray-700" title="Gửi ảnh">
                         <i class="fa-regular fa-image text-lg"></i>
                     </button>
 
                     <input type="text" id="messageInput" placeholder="Nhập tin nhắn..." autocomplete="off"
                            class="flex-1 bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                     
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white p-2.5 rounded-xl transition shrink-0">
+                    <button type="submit" id="sendBtn" class="bg-blue-600 hover:bg-blue-500 text-white p-2.5 rounded-xl transition shrink-0">
                         <i class="fa-solid fa-paper-plane text-sm px-1"></i>
                     </button>
                 </form>
@@ -216,8 +212,32 @@
             chung: [{ sender: "Hệ Thống", text: "Chào mừng các thành viên đã vào phòng chung!" }]
         };
 
-        // XỬ LÝ ĐĂNG NHẬP LỚP 1
-        window.handleLogin = function() {
+        // GẮN SỰ KIỆN SAU KHI TẢI TRANG ĐỂ TRÁNH LỖI HÀM
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginBtn = document.getElementById('loginBtn');
+            if (loginBtn) {
+                loginBtn.addEventListener('click', handleLogin);
+            }
+
+            const pinBtn = document.getElementById('pinBtn');
+            if (pinBtn) {
+                pinBtn.addEventListener('click', verifyPin);
+            }
+
+            const selectImgBtn = document.getElementById('selectImgBtn');
+            const imageInput = document.getElementById('imageInput');
+            if (selectImgBtn && imageInput) {
+                selectImgBtn.addEventListener('click', () => imageInput.click());
+                imageInput.addEventListener('change', previewImage);
+            }
+
+            const messageForm = document.getElementById('messageForm');
+            if (messageForm) {
+                messageForm.addEventListener('submit', sendMessage);
+            }
+        });
+
+        function handleLogin() {
             const nickname = document.getElementById('inputNickname').value.trim();
             const password = document.getElementById('inputPassword').value.trim();
             const errorDiv = document.getElementById('authError');
@@ -230,10 +250,9 @@
             } else {
                 errorDiv.classList.remove('hidden');
             }
-        };
+        }
 
-        // XỬ LÝ MÃ PIN LỚP 2
-        window.verifyPin = function() {
+        function verifyPin() {
             const pin = document.getElementById('pinInput').value.trim();
             const pinError = document.getElementById('pinError');
 
@@ -248,10 +267,9 @@
             } else {
                 pinError.classList.remove('hidden');
             }
-        };
+        }
 
-        // XEM TRƯỚC ẢNH
-        window.previewImage = function(event) {
+        function previewImage(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
@@ -262,16 +280,14 @@
                 };
                 reader.readAsDataURL(file);
             }
-        };
+        }
 
-        // XÓA ẢNH ĐÃ CHỌN
         window.clearImage = function() {
             selectedImageBase64 = null;
             document.getElementById('imageInput').value = '';
             document.getElementById('imagePreviewContainer').classList.add('hidden');
         };
 
-        // TẢI TIN NHẮN
         function loadMessages(roomId) {
             const messagesContainer = document.getElementById('chatMessages');
             messagesContainer.innerHTML = '';
@@ -312,8 +328,7 @@
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
 
-        // GỬI TIN NHẮN (HỖ TRỢ CẢ TEXT VÀ ẢNH)
-        window.sendMessage = function(e) {
+        function sendMessage(e) {
             e.preventDefault();
             const input = document.getElementById('messageInput');
             const text = input.value.trim();
@@ -330,17 +345,14 @@
                 image: selectedImageBase64
             });
 
-            // Lưu vào bộ nhớ trình duyệt
             localStorage.setItem('thinh_chat_storage', JSON.stringify(chatStorage));
 
-            // Reset khung nhập và ảnh
             input.value = '';
             clearImage();
 
             loadMessages(currentRoom);
-        };
+        }
 
-        // PHÓNG TO ẢNH KHI BẤM VÀO
         window.openModal = function(src) {
             document.getElementById('modalImg').src = src;
             document.getElementById('imageModal').classList.remove('hidden');
@@ -350,29 +362,4 @@
             document.getElementById('imageModal').classList.add('hidden');
         };
 
-        // CHUYỂN PHÒNG CHAT
-        window.switchRoom = function(roomId) {
-            currentRoom = roomId;
-            document.querySelectorAll('.room-btn').forEach(btn => {
-                btn.classList.remove('bg-blue-600', 'text-white');
-                btn.classList.add('text-gray-300');
-            });
-
-            const activeBtn = document.getElementById(`room-${roomId}`);
-            if (activeBtn) {
-                activeBtn.classList.add('bg-blue-600', 'text-white');
-            }
-
-            document.getElementById('currentRoomTitle').innerText = `# ${roomId}`;
-            loadMessages(roomId);
-        };
-
-        // KHÓA MÀN HÌNH
-        window.lockApp = function() {
-            document.getElementById('pinInput').value = '';
-            document.getElementById('pinOverlay').classList.remove('hidden');
-        };
-
-        // TOGGLE SIDEBAR
-        window.toggleSidebar = function() {
-            const sidebar = document.getElementById('sidebar');
+        window
