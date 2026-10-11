@@ -57,7 +57,7 @@
                     Mật khẩu hoặc biệt danh không đúng! 
                 </div>
 
-                <button type="button" onclick="handleLogin()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-2">
+                <button type="button" id="loginBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-2">
                     <span>Xác Nhận Đăng Nhập</span>
                     <i class="fa-solid fa-arrow-right text-sm"></i>
                 </button>
@@ -73,7 +73,7 @@
             </div>
             <div>
                 <h3 class="text-xl font-bold text-white">Mã PIN Nội Bộ (Lớp 2)</h3>
-                <p class="text-gray-400 text-xs mt-1">Nhập mã PIN phụ để vào giao diện </p>
+                <p class="text-gray-400 text-xs mt-1">Nhập mã PIN phụ để vào giao diện</p>
             </div>
 
             <div class="flex justify-center space-x-2">
@@ -82,17 +82,17 @@
             </div>
 
             <div id="pinError" class="hidden text-red-400 text-xs bg-red-950/50 border border-red-800/50 py-1.5 rounded-lg">
-                Mã PIN phụ không đúng! (Mã đúng: 8888)
+                Mã PIN phụ không đúng! 
             </div>
 
-            <button type="button" onclick="verifyPin()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold py-3 rounded-xl transition">
+            <button type="button" id="pinBtn" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold py-3 rounded-xl transition">
                 Mở Khóa
             </button>
         </div>
     </div>
 
     <!-- MODAL XEM ẢNH PHÓNG TO -->
-    <div id="imageModal" class="hidden fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4" onclick="closeModal()">
+    <div id="imageModal" class="hidden fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4">
         <img id="modalImg" class="max-w-full max-h-full rounded-lg shadow-2xl object-contain">
     </div>
 
@@ -106,14 +106,14 @@
                     <i class="fa-solid fa-users-gear text-blue-400 text-xl"></i>
                     <h1 class="font-bold text-lg text-white">Phòng Chat Nhóm</h1>
                 </div>
-                <button onclick="toggleSidebar()" class="md:hidden text-gray-400 hover:text-white">
+                <button type="button" id="closeSidebarBtn" class="md:hidden text-gray-400 hover:text-white">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
 
             <!-- DANH SÁCH PHÒNG CHAT -->
             <div class="flex-1 overflow-y-auto p-2 space-y-1" id="roomList">
-                <button onclick="switchRoom('chung')" id="room-chung" class="room-btn active w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition bg-blue-600 text-white">
+                <button type="button" id="room-chung" class="room-btn active w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition bg-blue-600 text-white" data-room="chung">
                     <span class="flex items-center space-x-2">
                         <i class="fa-solid fa-hashtag text-xs"></i>
                         <span>Phòng Chung</span>
@@ -123,246 +123,4 @@
             </div>
 
             <!-- NGUỜI DÙNG HIỆN TẠI & TIỆN ÍCH -->
-            <div class="p-3 border-t border-gray-700 bg-gray-850 flex items-center justify-between">
-                <div class="flex items-center space-x-2 overflow-hidden">
-                    <div id="userAvatar" class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold text-white shrink-0">
-                        U
-                    </div>
-                    <div class="truncate">
-                        <p id="displayNickname" class="text-sm font-semibold text-white truncate">Chưa đăng nhập</p>
-                        <p class="text-[10px] text-green-400 flex items-center">
-                            <span class="w-1.5 h-1.5 rounded-full bg-green-400 inline-block mr-1"></span> Hỗ trợ gửi ảnh
-                        </p>
-                    </div>
-                </div>
-                <button onclick="lockApp()" title="Khóa màn hình" class="text-gray-400 hover:text-amber-400 p-1.5 rounded-lg transition">
-                    <i class="fa-solid fa-lock text-sm"></i>
-                </button>
-            </div>
-        </aside>
-
-        <!-- NỘI DUNG CHAT -->
-        <main class="flex-1 flex flex-col bg-gray-900">
-            
-            <!-- HEADER CỦA KHUNG CHAT -->
-            <header class="h-14 border-b border-gray-800 bg-gray-850 px-4 flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <button onclick="toggleSidebar()" class="md:hidden text-gray-400 hover:text-white">
-                        <i class="fa-solid fa-bars text-lg"></i>
-                    </button>
-                    <div>
-                        <h2 id="currentRoomTitle" class="font-bold text-white text-base"># Phòng Chung</h2>
-                        <p class="text-xs text-gray-400">Hệ thống chat nội bộ của Thịnh</p>
-                    </div>
-                </div>
-            </header>
-
-            <!-- KHO CHỨA TIN NHẮN -->
-            <div id="chatMessages" class="flex-1 overflow-y-auto p-4 space-y-4">
-                <div class="flex flex-col items-start">
-                    <div class="flex items-baseline space-x-2 mb-1">
-                        <span class="text-xs font-semibold text-gray-400">Hệ Thống</span>
-                    </div>
-                    <div class="max-w-[80%] px-4 py-2.5 rounded-2xl text-sm bg-gray-800 text-gray-100 rounded-tl-none border border-gray-700">
-                        Chào mừng bạn đến với phòng chat nhóm kín! Bạn có thể gửi tin nhắn văn bản và hình ảnh trực tiếp.
-                    </div>
-                </div>
-            </div>
-
-            <!-- KHU VỰC XEM TRƯỚC ẢNH -->
-            <div id="imagePreviewContainer" class="hidden px-4 py-2 bg-gray-850 border-t border-gray-800 flex items-center space-x-3">
-                <div class="relative inline-block">
-                    <img id="imagePreview" class="h-16 w-16 object-cover rounded-xl border border-gray-700">
-                    <button type="button" onclick="clearImage()" class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-500">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-                <span class="text-xs text-gray-400">Ảnh đã sẵn sàng để gửi kèm.</span>
-            </div>
-
-            <!-- KHUNG NHẬP TIN NHẮN -->
-            <footer class="p-3 bg-gray-850 border-t border-gray-800">
-                <form id="messageForm" onsubmit="sendMessage(event); return false;" class="flex items-center space-x-2">
-                    <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="previewImage(event)">
-                    <button type="button" onclick="document.getElementById('imageInput').click()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white p-2.5 rounded-xl transition shrink-0 border border-gray-700" title="Gửi ảnh">
-                        <i class="fa-regular fa-image text-lg"></i>
-                    </button>
-
-                    <input type="text" id="messageInput" placeholder="Nhập tin nhắn..." autocomplete="off"
-                           class="flex-1 bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white p-2.5 rounded-xl transition shrink-0">
-                        <i class="fa-solid fa-paper-plane text-sm px-1"></i>
-                    </button>
-                </form>
-            </footer>
-        </main>
-    </div>
-
-    <!-- APP LOGIC -->
-    <script>
-        const MASTER_PASSWORD = "nhomchatkincuathinh";
-        const MASTER_PIN = "8888";
-
-        let currentNickname = "";
-        let currentRoom = "chung";
-        let selectedImageBase64 = null;
-        
-        let chatStorage = JSON.parse(localStorage.getItem('thinh_chat_storage')) || {
-            chung: [{ sender: "Hệ Thống", text: "Chào mừng các thành viên đã vào phòng chung!" }]
-        };
-
-        // GẮN TRỰC TIẾP VÀO WINDOW ĐỂ BẢ ĐẢM KHÔNG BAO GIỜ BỊ LỖI
-        window.handleLogin = function() {
-            const nickname = document.getElementById('inputNickname').value.trim();
-            const password = document.getElementById('inputPassword').value.trim();
-            const errorDiv = document.getElementById('authError');
-
-            if (password === MASTER_PASSWORD && nickname !== "") {
-                currentNickname = nickname;
-                errorDiv.classList.add('hidden');
-                document.getElementById('authOverlay').classList.add('hidden');
-                document.getElementById('pinOverlay').classList.remove('hidden');
-            } else {
-                errorDiv.classList.remove('hidden');
-            }
-        };
-
-        window.verifyPin = function() {
-            const pin = document.getElementById('pinInput').value.trim();
-            const pinError = document.getElementById('pinError');
-
-            if (pin === MASTER_PIN) {
-                pinError.classList.add('hidden');
-                document.getElementById('pinOverlay').classList.add('hidden');
-                
-                document.getElementById('displayNickname').innerText = currentNickname;
-                document.getElementById('userAvatar').innerText = currentNickname.charAt(0).toUpperCase();
-                
-                loadMessages(currentRoom);
-            } else {
-                pinError.classList.remove('hidden');
-            }
-        };
-
-        window.previewImage = function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    selectedImageBase64 = e.target.result;
-                    document.getElementById('imagePreview').src = selectedImageBase64;
-                    document.getElementById('imagePreviewContainer').classList.remove('hidden');
-                };
-                reader.readAsDataURL(file);
-            }
-        };
-
-        window.clearImage = function() {
-            selectedImageBase64 = null;
-            document.getElementById('imageInput').value = '';
-            document.getElementById('imagePreviewContainer').classList.add('hidden');
-        };
-
-        function loadMessages(roomId) {
-            const messagesContainer = document.getElementById('chatMessages');
-            messagesContainer.innerHTML = '';
-
-            const messages = chatStorage[roomId] || [];
-            if (messages.length === 0) {
-                messagesContainer.innerHTML = '<p class="text-center text-xs text-gray-500 py-4">Chưa có tin nhắn nào trong phòng này.</p>';
-                return;
-            }
-
-            messages.forEach((msg) => {
-                const isMe = msg.sender === currentNickname;
-                const messageElement = document.createElement('div');
-                messageElement.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'}`;
-                
-                let imageHtml = '';
-                if (msg.image) {
-                    imageHtml = `<img src="${msg.image}" class="max-w-xs max-h-60 rounded-xl mb-1 cursor-pointer object-cover border border-gray-700" onclick="openModal('${msg.image}')">`;
-                }
-
-                let textHtml = '';
-                if (msg.text) {
-                    textHtml = `<div class="px-4 py-2.5 rounded-2xl text-sm ${isMe ? 'bg-blue-600 text-white rounded-tr-none' : 'bg-gray-800 text-gray-100 rounded-tl-none border border-gray-700'}">${msg.text}</div>`;
-                }
-
-                messageElement.innerHTML = `
-                    <div class="flex items-baseline space-x-2 mb-1">
-                        <span class="text-xs font-semibold text-gray-400">${msg.sender}</span>
-                    </div>
-                    <div class="max-w-[80%] space-y-1">
-                        ${imageHtml}
-                        ${textHtml}
-                    </div>
-                `;
-                messagesContainer.appendChild(messageElement);
-            });
-
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-
-        window.sendMessage = function(e) {
-            e.preventDefault();
-            const input = document.getElementById('messageInput');
-            const text = input.value.trim();
-
-            if (!text && !selectedImageBase64) return;
-
-            if (!chatStorage[currentRoom]) {
-                chatStorage[currentRoom] = [];
-            }
-
-            chatStorage[currentRoom].push({
-                sender: currentNickname,
-                text: text,
-                image: selectedImageBase64
-            });
-
-            localStorage.setItem('thinh_chat_storage', JSON.stringify(chatStorage));
-
-            input.value = '';
-            clearImage();
-
-            loadMessages(currentRoom);
-        };
-
-        window.openModal = function(src) {
-            document.getElementById('modalImg').src = src;
-            document.getElementById('imageModal').classList.remove('hidden');
-        };
-
-        window.closeModal = function() {
-            document.getElementById('imageModal').classList.add('hidden');
-        };
-
-        window.switchRoom = function(roomId) {
-            currentRoom = roomId;
-            document.querySelectorAll('.room-btn').forEach(btn => {
-                btn.classList.remove('bg-blue-600', 'text-white');
-                btn.classList.add('text-gray-300');
-            });
-
-            const activeBtn = document.getElementById(`room-${roomId}`);
-            if (activeBtn) {
-                activeBtn.classList.add('bg-blue-600', 'text-white');
-            }
-
-            document.getElementById('currentRoomTitle').innerText = `# ${roomId}`;
-            loadMessages(roomId);
-        };
-
-        window.lockApp = function() {
-            document.getElementById('pinInput').value = '';
-            document.getElementById('pinOverlay').classList.remove('hidden');
-        };
-
-        window.toggleSidebar = function() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('-translate-x-full');
-        };
-    </script>
-</body>
-</html>
+            <div class="p-3 border-t border-gray-700 bg-gray-850 flex
