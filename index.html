@@ -57,7 +57,7 @@
                     Mật khẩu hoặc biệt danh không đúng! 
                 </div>
 
-                <button type="button" id="loginBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-2">
+                <button type="button" onclick="handleLogin()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-2">
                     <span>Xác Nhận Đăng Nhập</span>
                     <i class="fa-solid fa-arrow-right text-sm"></i>
                 </button>
@@ -73,7 +73,7 @@
             </div>
             <div>
                 <h3 class="text-xl font-bold text-white">Mã PIN Nội Bộ (Lớp 2)</h3>
-                <p class="text-gray-400 text-xs mt-1">Nhập mã PIN phụ để vào giao diện (Mã: 8888)</p>
+                <p class="text-gray-400 text-xs mt-1">Nhập mã PIN phụ để vào giao diện </p>
             </div>
 
             <div class="flex justify-center space-x-2">
@@ -82,10 +82,10 @@
             </div>
 
             <div id="pinError" class="hidden text-red-400 text-xs bg-red-950/50 border border-red-800/50 py-1.5 rounded-lg">
-                Mã PIN phụ không đúng! 
+                Mã PIN phụ không đúng! (Mã đúng: 8888)
             </div>
 
-            <button type="button" id="pinBtn" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold py-3 rounded-xl transition">
+            <button type="button" onclick="verifyPin()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold py-3 rounded-xl transition">
                 Mở Khóa
             </button>
         </div>
@@ -131,7 +131,7 @@
                     <div class="truncate">
                         <p id="displayNickname" class="text-sm font-semibold text-white truncate">Chưa đăng nhập</p>
                         <p class="text-[10px] text-green-400 flex items-center">
-                            <span class="w-1.5 h-1.5 rounded-full bg-green-400 inline-block mr-1"></span> Sẵn sàng gửi ảnh
+                            <span class="w-1.5 h-1.5 rounded-full bg-green-400 inline-block mr-1"></span> Hỗ trợ gửi ảnh
                         </p>
                     </div>
                 </div>
@@ -182,16 +182,16 @@
 
             <!-- KHUNG NHẬP TIN NHẮN -->
             <footer class="p-3 bg-gray-850 border-t border-gray-800">
-                <form id="messageForm" class="flex items-center space-x-2">
-                    <input type="file" id="imageInput" accept="image/*" class="hidden">
-                    <button type="button" id="selectImgBtn" class="bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white p-2.5 rounded-xl transition shrink-0 border border-gray-700" title="Gửi ảnh">
+                <form id="messageForm" onsubmit="sendMessage(event); return false;" class="flex items-center space-x-2">
+                    <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="previewImage(event)">
+                    <button type="button" onclick="document.getElementById('imageInput').click()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white p-2.5 rounded-xl transition shrink-0 border border-gray-700" title="Gửi ảnh">
                         <i class="fa-regular fa-image text-lg"></i>
                     </button>
 
                     <input type="text" id="messageInput" placeholder="Nhập tin nhắn..." autocomplete="off"
                            class="flex-1 bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                     
-                    <button type="submit" id="sendBtn" class="bg-blue-600 hover:bg-blue-500 text-white p-2.5 rounded-xl transition shrink-0">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white p-2.5 rounded-xl transition shrink-0">
                         <i class="fa-solid fa-paper-plane text-sm px-1"></i>
                     </button>
                 </form>
@@ -212,32 +212,8 @@
             chung: [{ sender: "Hệ Thống", text: "Chào mừng các thành viên đã vào phòng chung!" }]
         };
 
-        // GẮN SỰ KIỆN SAU KHI TẢI TRANG ĐỂ TRÁNH LỖI HÀM
-        document.addEventListener('DOMContentLoaded', () => {
-            const loginBtn = document.getElementById('loginBtn');
-            if (loginBtn) {
-                loginBtn.addEventListener('click', handleLogin);
-            }
-
-            const pinBtn = document.getElementById('pinBtn');
-            if (pinBtn) {
-                pinBtn.addEventListener('click', verifyPin);
-            }
-
-            const selectImgBtn = document.getElementById('selectImgBtn');
-            const imageInput = document.getElementById('imageInput');
-            if (selectImgBtn && imageInput) {
-                selectImgBtn.addEventListener('click', () => imageInput.click());
-                imageInput.addEventListener('change', previewImage);
-            }
-
-            const messageForm = document.getElementById('messageForm');
-            if (messageForm) {
-                messageForm.addEventListener('submit', sendMessage);
-            }
-        });
-
-        function handleLogin() {
+        // GẮN TRỰC TIẾP VÀO WINDOW ĐỂ BẢ ĐẢM KHÔNG BAO GIỜ BỊ LỖI
+        window.handleLogin = function() {
             const nickname = document.getElementById('inputNickname').value.trim();
             const password = document.getElementById('inputPassword').value.trim();
             const errorDiv = document.getElementById('authError');
@@ -250,9 +226,9 @@
             } else {
                 errorDiv.classList.remove('hidden');
             }
-        }
+        };
 
-        function verifyPin() {
+        window.verifyPin = function() {
             const pin = document.getElementById('pinInput').value.trim();
             const pinError = document.getElementById('pinError');
 
@@ -267,9 +243,9 @@
             } else {
                 pinError.classList.remove('hidden');
             }
-        }
+        };
 
-        function previewImage(event) {
+        window.previewImage = function(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
@@ -280,7 +256,7 @@
                 };
                 reader.readAsDataURL(file);
             }
-        }
+        };
 
         window.clearImage = function() {
             selectedImageBase64 = null;
@@ -328,7 +304,7 @@
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
 
-        function sendMessage(e) {
+        window.sendMessage = function(e) {
             e.preventDefault();
             const input = document.getElementById('messageInput');
             const text = input.value.trim();
@@ -351,7 +327,7 @@
             clearImage();
 
             loadMessages(currentRoom);
-        }
+        };
 
         window.openModal = function(src) {
             document.getElementById('modalImg').src = src;
@@ -362,4 +338,31 @@
             document.getElementById('imageModal').classList.add('hidden');
         };
 
-        window
+        window.switchRoom = function(roomId) {
+            currentRoom = roomId;
+            document.querySelectorAll('.room-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('text-gray-300');
+            });
+
+            const activeBtn = document.getElementById(`room-${roomId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-blue-600', 'text-white');
+            }
+
+            document.getElementById('currentRoomTitle').innerText = `# ${roomId}`;
+            loadMessages(roomId);
+        };
+
+        window.lockApp = function() {
+            document.getElementById('pinInput').value = '';
+            document.getElementById('pinOverlay').classList.remove('hidden');
+        };
+
+        window.toggleSidebar = function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('-translate-x-full');
+        };
+    </script>
+</body>
+</html>
