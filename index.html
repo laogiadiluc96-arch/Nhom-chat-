@@ -57,7 +57,7 @@
                     Mật khẩu hoặc biệt danh không chính xác!
                 </div>
 
-                <button type="button" onclick="handleLogin()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-2">
+                <button type="button" id="loginBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-2">
                     <span>Xác Nhận Đăng Nhập</span>
                     <i class="fa-solid fa-arrow-right text-sm"></i>
                 </button>
@@ -85,14 +85,14 @@
                 Mã PIN phụ không đúng!
             </div>
 
-            <button type="button" onclick="verifyPin()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold py-3 rounded-xl transition">
+            <button type="button" id="pinBtn" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold py-3 rounded-xl transition">
                 Mở Khóa
             </button>
         </div>
     </div>
 
     <!-- MODAL XEM ẢNH PHÓNG TO -->
-    <div id="imageModal" class="hidden fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4" onclick="closeModal()">
+    <div id="imageModal" class="hidden fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4">
         <img id="modalImg" class="max-w-full max-h-full rounded-lg shadow-2xl object-contain">
     </div>
 
@@ -106,14 +106,14 @@
                     <i class="fa-solid fa-users-gear text-blue-400 text-xl"></i>
                     <h1 class="font-bold text-lg text-white">Phòng Chat Nhóm</h1>
                 </div>
-                <button type="button" onclick="toggleSidebar()" class="md:hidden text-gray-400 hover:text-white">
+                <button type="button" id="closeSidebarBtn" class="md:hidden text-gray-400 hover:text-white">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
 
             <!-- DANH SÁCH PHÒNG CHAT -->
             <div class="flex-1 overflow-y-auto p-2 space-y-1" id="roomList">
-                <button type="button" onclick="switchRoom('chung')" id="room-chung" class="room-btn active w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition bg-blue-600 text-white">
+                <button type="button" id="room-chung" class="room-btn active w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition bg-blue-600 text-white" data-room="chung">
                     <span class="flex items-center space-x-2">
                         <i class="fa-solid fa-hashtag text-xs"></i>
                         <span>Phòng Chung</span>
@@ -131,11 +131,11 @@
                     <div class="truncate">
                         <p id="displayNickname" class="text-sm font-semibold text-white truncate">Chưa đăng nhập</p>
                         <p class="text-[10px] text-green-400 flex items-center">
-                            <span class="w-1.5 h-1.5 rounded-full bg-green-400 inline-block mr-1"></span> Hoạt động ổn định
+                            <span class="w-1.5 h-1.5 rounded-full bg-green-400 inline-block mr-1"></span> Sẵn sàng
                         </p>
                     </div>
                 </div>
-                <button type="button" onclick="lockApp()" title="Khóa màn hình" class="text-gray-400 hover:text-amber-400 p-1.5 rounded-lg transition">
+                <button type="button" id="lockBtn" title="Khóa màn hình" class="text-gray-400 hover:text-amber-400 p-1.5 rounded-lg transition">
                     <i class="fa-solid fa-lock text-sm"></i>
                 </button>
             </div>
@@ -147,7 +147,7 @@
             <!-- HEADER CỦA KHUNG CHAT -->
             <header class="h-14 border-b border-gray-800 bg-gray-850/90 backdrop-blur px-4 flex items-center justify-between z-10">
                 <div class="flex items-center space-x-3">
-                    <button type="button" onclick="toggleSidebar()" class="md:hidden text-gray-400 hover:text-white">
+                    <button type="button" id="toggleSidebarBtn" class="md:hidden text-gray-400 hover:text-white">
                         <i class="fa-solid fa-bars text-lg"></i>
                     </button>
                     <div>
@@ -157,12 +157,12 @@
                 </div>
                 <!-- NÚT ĐỔI ẢNH NỀN & XÓA NỀN -->
                 <div class="flex items-center space-x-2">
-                    <input type="file" id="bgInput" accept="image/*" class="hidden" onchange="changeBackground(event)">
-                    <button type="button" onclick="document.getElementById('bgInput').click()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white px-3 py-1.5 rounded-lg text-xs border border-gray-700 transition flex items-center space-x-1.5">
+                    <input type="file" id="bgInput" accept="image/*" class="hidden">
+                    <button type="button" id="changeBgBtn" class="bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white px-3 py-1.5 rounded-lg text-xs border border-gray-700 transition flex items-center space-x-1.5">
                         <i class="fa-solid fa-image"></i>
                         <span>Đổi nền chat</span>
                     </button>
-                    <button type="button" id="resetBgBtn" onclick="resetBackground()" class="hidden bg-red-900/50 hover:bg-red-800 text-red-200 px-2.5 py-1.5 rounded-lg text-xs border border-red-700 transition" title="Xóa ảnh nền">
+                    <button type="button" id="resetBgBtn" class="hidden bg-red-900/50 hover:bg-red-800 text-red-200 px-2.5 py-1.5 rounded-lg text-xs border border-red-700 transition" title="Xóa ảnh nền">
                         <i class="fa-solid fa-trash-can"></i>
                     </button>
                 </div>
@@ -175,7 +175,7 @@
                         <span class="text-xs font-semibold text-gray-400">Hệ Thống</span>
                     </div>
                     <div class="max-w-[80%] px-4 py-2.5 rounded-2xl text-sm bg-gray-800/90 text-gray-100 rounded-tl-none border border-gray-700 shadow-lg">
-                        Chào mừng bạn đến với phòng chat nhóm kín! Đã khắc phục hoàn toàn lỗi trôi tin nhắn.
+                        Chào mừng bạn đến với phòng chat nhóm kín!
                     </div>
                 </div>
             </div>
@@ -184,7 +184,7 @@
             <div id="imagePreviewContainer" class="hidden px-4 py-2 bg-gray-850/90 backdrop-blur border-t border-gray-800 flex items-center space-x-3 z-10">
                 <div class="relative inline-block">
                     <img id="imagePreview" class="h-16 w-16 object-cover rounded-xl border border-gray-700">
-                    <button type="button" onclick="clearImage()" class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-500">
+                    <button type="button" id="clearImgBtn" class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-500">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
@@ -193,16 +193,16 @@
 
             <!-- KHUNG NHẬP TIN NHẮN -->
             <footer class="p-3 bg-gray-850/90 backdrop-blur border-t border-gray-800 z-10">
-                <form id="messageForm" onsubmit="sendMessage(event); return false;" class="flex items-center space-x-2">
-                    <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="previewImage(event)">
-                    <button type="button" onclick="document.getElementById('imageInput').click()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white p-2.5 rounded-xl transition shrink-0 border border-gray-700" title="Gửi ảnh">
+                <form id="messageForm" class="flex items-center space-x-2">
+                    <input type="file" id="imageInput" accept="image/*" class="hidden">
+                    <button type="button" id="selectImgBtn" class="bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white p-2.5 rounded-xl transition shrink-0 border border-gray-700" title="Gửi ảnh">
                         <i class="fa-regular fa-image text-lg"></i>
                     </button>
 
                     <input type="text" id="messageInput" placeholder="Nhập tin nhắn..." autocomplete="off"
                            class="flex-1 bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                     
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white p-2.5 rounded-xl transition shrink-0">
+                    <button type="submit" id="sendBtn" class="bg-blue-600 hover:bg-blue-500 text-white p-2.5 rounded-xl transition shrink-0">
                         <i class="fa-solid fa-paper-plane text-sm px-1"></i>
                     </button>
                 </form>
@@ -210,7 +210,7 @@
         </main>
     </div>
 
-    <!-- APP LOGIC CHUẨN LƯU BỘ NHỚ LỰC CỤC LỰC MẠNH -->
+    <!-- APP LOGIC -->
     <script>
         const MASTER_PASSWORD = "nhomchatkincuathinh";
         const MASTER_PIN = "8888";
@@ -223,20 +223,228 @@
             chung: [{ sender: "Hệ Thống", text: "Chào mừng các thành viên đã vào phòng chung!" }]
         };
 
-        window.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
             const savedBg = localStorage.getItem('thinh_chat_bg');
             if (savedBg) {
                 applyBackground(savedBg);
             }
+
+            // Đăng nhập Lớp 1
+            document.getElementById('loginBtn').addEventListener('click', function() {
+                const nickname = document.getElementById('inputNickname').value.trim();
+                const password = document.getElementById('inputPassword').value.trim();
+                const errorDiv = document.getElementById('authError');
+
+                if (password === MASTER_PASSWORD && nickname !== "") {
+                    currentNickname = nickname;
+                    errorDiv.classList.add('hidden');
+                    document.getElementById('authOverlay').classList.add('hidden');
+                    document.getElementById('pinOverlay').classList.remove('hidden');
+                } else {
+                    errorDiv.classList.remove('hidden');
+                }
+            });
+
+            // Đăng nhập Lớp 2 (PIN)
+            document.getElementById('pinBtn').addEventListener('click', function() {
+                const pin = document.getElementById('pinInput').value.trim();
+                const pinError = document.getElementById('pinError');
+
+                if (pin === MASTER_PIN) {
+                    pinError.classList.add('hidden');
+                    document.getElementById('pinOverlay').classList.add('hidden');
+                    
+                    document.getElementById('displayNickname').innerText = currentNickname;
+                    document.getElementById('userAvatar').innerText = currentNickname.charAt(0).toUpperCase();
+                    
+                    loadMessages(currentRoom);
+                } else {
+                    pinError.classList.remove('hidden');
+                }
+            });
+
+            // Đổi nền
+            const changeBgBtn = document.getElementById('changeBgBtn');
+            const bgInput = document.getElementById('bgInput');
+            if (changeBgBtn && bgInput) {
+                changeBgBtn.addEventListener('click', () => bgInput.click());
+                bgInput.addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const bgBase64 = e.target.result;
+                            localStorage.setItem('thinh_chat_bg', bgBase64);
+                            applyBackground(bgBase64);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            const resetBgBtn = document.getElementById('resetBgBtn');
+            if (resetBgBtn) {
+                resetBgBtn.addEventListener('click', function() {
+                    localStorage.removeItem('thinh_chat_bg');
+                    document.getElementById('chatMainBg').style.backgroundImage = '';
+                    resetBgBtn.classList.add('hidden');
+                });
+            }
+
+            // Chọn ảnh
+            const selectImgBtn = document.getElementById('selectImgBtn');
+            const imageInput = document.getElementById('imageInput');
+            if (selectImgBtn && imageInput) {
+                selectImgBtn.addEventListener('click', () => imageInput.click());
+                imageInput.addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            selectedImageBase64 = e.target.result;
+                            document.getElementById('imagePreview').src = selectedImageBase64;
+                            document.getElementById('imagePreviewContainer').classList.remove('hidden');
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            const clearImgBtn = document.getElementById('clearImgBtn');
+            if (clearImgBtn) {
+                clearImgBtn.addEventListener('click', function() {
+                    selectedImageBase64 = null;
+                    document.getElementById('imageInput').value = '';
+                    document.getElementById('imagePreviewContainer').classList.add('hidden');
+                });
+            }
+
+            // Gửi tin nhắn
+            const messageForm = document.getElementById('messageForm');
+            if (messageForm) {
+                messageForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const input = document.getElementById('messageInput');
+                    const text = input.value.trim();
+
+                    if (!text && !selectedImageBase64) return;
+
+                    if (!chatStorage[currentRoom]) {
+                        chatStorage[currentRoom] = [];
+                    }
+
+                    chatStorage[currentRoom].push({
+                        sender: currentNickname,
+                        text: text,
+                        image: selectedImageBase64
+                    });
+
+                    localStorage.setItem('thinh_chat_storage', JSON.stringify(chatStorage));
+
+                    input.value = '';
+                    selectedImageBase64 = null;
+                    document.getElementById('imageInput').value = '';
+                    document.getElementById('imagePreviewContainer').classList.add('hidden');
+
+                    loadMessages(currentRoom);
+                });
+            }
+
+            // Modal ảnh
+            const imageModal = document.getElementById('imageModal');
+            if (imageModal) {
+                imageModal.addEventListener('click', () => imageModal.classList.add('hidden'));
+            }
+
+            // Sidebar & Lock
+            const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
+            const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+            const sidebar = document.getElementById('sidebar');
+            if (toggleSidebarBtn && sidebar) {
+                toggleSidebarBtn.addEventListener('click', () => sidebar.classList.toggle('-translate-x-full'));
+            }
+            if (closeSidebarBtn && sidebar) {
+                closeSidebarBtn.addEventListener('click', () => sidebar.classList.toggle('-translate-x-full'));
+            }
+
+            const lockBtn = document.getElementById('lockBtn');
+            if (lockBtn) {
+                lockBtn.addEventListener('click', function() {
+                    document.getElementById('pinInput').value = '';
+                    document.getElementById('pinOverlay').classList.remove('hidden');
+                });
+            }
         });
 
-        window.handleLogin = function() {
-            const nickname = document.getElementById('inputNickname').value.trim();
-            const password = document.getElementById('inputPassword').value.trim();
-            const errorDiv = document.getElementById('authError');
+        function applyBackground(base64) {
+            const mainBg = document.getElementById('chatMainBg');
+            mainBg.style.backgroundImage = `url('${base64}')`;
+            document.getElementById('resetBgBtn').classList.remove('hidden');
+        }
 
-            if (password === MASTER_PASSWORD && nickname !== "") {
-                currentNickname = nickname;
-                errorDiv.classList.add('hidden');
-                document.getElementById('authOverlay').classList.add('hidden');
-                document.getElementById('pin
+        function loadMessages(roomId) {
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.innerHTML = '';
+
+            const messages = chatStorage[roomId] || [];
+            if (messages.length === 0) {
+                messagesContainer.innerHTML = '<p class="text-center text-xs text-gray-300 py-4">Chưa có tin nhắn nào trong phòng này.</p>';
+                return;
+            }
+
+            messages.forEach((msg) => {
+                const isMe = msg.sender === currentNickname;
+                const messageElement = document.createElement('div');
+                messageElement.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'}`;
+                
+                let imageHtml = '';
+                if (msg.image) {
+                    imageHtml = `<img src="${msg.image}" class="max-w-xs max-h-60 rounded-xl mb-1 cursor-pointer object-cover border border-gray-700 img-lightbox" data-src="${msg.image}">`;
+                }
+
+                let textHtml = '';
+                if (msg.text) {
+                    textHtml = `<div class="px-4 py-2.5 rounded-2xl text-sm shadow-md ${isMe ? 'bg-blue-600 text-white rounded-tr-none' : 'bg-gray-800/90 text-gray-100 rounded-tl-none border border-gray-700'}">${msg.text}</div>`;
+                }
+
+                messageElement.innerHTML = `
+                    <div class="flex items-baseline space-x-2 mb-1">
+                        <span class="text-xs font-semibold text-gray-300 drop-shadow">${msg.sender}</span>
+                    </div>
+                    <div class="max-w-[80%] space-y-1">
+                        ${imageHtml}
+                        ${textHtml}
+                    </div>
+                `;
+                messagesContainer.appendChild(messageElement);
+            });
+
+            document.querySelectorAll('.img-lightbox').forEach(img => {
+                img.addEventListener('click', function() {
+                    const src = this.getAttribute('data-src');
+                    document.getElementById('modalImg').src = src;
+                    document.getElementById('imageModal').classList.remove('hidden');
+                });
+            });
+
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function switchRoom(roomId) {
+            currentRoom = roomId;
+            document.querySelectorAll('.room-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('text-gray-300');
+            });
+
+            const activeBtn = document.getElementById(`room-${roomId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-blue-600', 'text-white');
+            }
+
+            document.getElementById('currentRoomTitle').innerText = `# ${roomId}`;
+            loadMessages(roomId);
+        }
+    </script>
+</body>
+</html>
